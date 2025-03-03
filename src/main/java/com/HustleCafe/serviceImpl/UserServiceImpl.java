@@ -29,6 +29,21 @@ public class UserServiceImpl implements UserService {
     UserDao userDao;
 
     @Autowired
+    AuthenticationManager authenticationManager;
+
+    @Autowired
+    CustumerUserDetailsService custumerUserDetailsService;
+
+    @Autowired
+    JwtUtil jwtUtil;
+
+    @Autowired
+    JwtFilter jwtFilter;
+
+    @Autowired
+    EmailUtils emailUtils;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;  // Add PasswordEncoder here
 
     @Override
@@ -68,23 +83,6 @@ public class UserServiceImpl implements UserService {
         return requestMap.containsKey("name") && requestMap.containsKey("contactNumber") &&
                 requestMap.containsKey("email") && requestMap.containsKey("password");
     }
-
-
-
-    @Autowired
-    AuthenticationManager authenticationManager;
-
-    @Autowired
-    CustumerUserDetailsService custumerUserDetailsService;
-
-    @Autowired
-    JwtUtil jwtUtil;
-
-    @Autowired
-    JwtFilter jwtFilter;
-
-    @Autowired
-    EmailUtils emailUtils;
 
     @Override
     public ResponseEntity<String> login(Map<String, String> requestMap) {
@@ -145,8 +143,6 @@ public class UserServiceImpl implements UserService {
         return CafeUtils.getResponseEntity("yayayya",HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-
-
     private void sendMailToAllAdmin(String status, String user, List<String> allAdmin) {
         allAdmin.remove(jwtFilter.getCurrentUser());
         if(status!=null && status.equalsIgnoreCase("true")){
@@ -155,6 +151,7 @@ public class UserServiceImpl implements UserService {
             emailUtils.sendSimpleMessage(jwtFilter.getCurrentUser(), "Account Disabled" , "USER : "+ user + "\n is disabled by \nADMIN:-" + jwtFilter.getCurrentUser(),allAdmin);
         }
     }
+
     @Override
     public ResponseEntity<String> checkToken() {
         return CafeUtils.getResponseEntity("true", HttpStatus.OK);

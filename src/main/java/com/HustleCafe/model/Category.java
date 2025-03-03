@@ -11,7 +11,8 @@ import java.io.Serializable;
 @DynamicInsert
 @DynamicUpdate
 @Table(name = "category")
-@NamedQuery(name = "Category.getAllCategory", query = "select c from Category c")
+@NamedQuery(name = "Category.getAllCategory",   query = "SELECT c FROM Category c WHERE c.id IN (SELECT p.category.id FROM Product p WHERE p.status = 'true')")
+
 public class Category implements Serializable {
 
     private static final long serialVersionUID = 1L;
